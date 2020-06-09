@@ -11,6 +11,7 @@ import Slider from '@material-ui/core/Slider';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 
+const backend_url = process.env.BACKEND_URL || "http://localhost:5000";
 const useStyles = makeStyles({
   root: {
     width: 300
@@ -40,7 +41,7 @@ function App() {
   var [colorChart, colorSetter] = useState({dum: '#000000', my: '#ffffff'});
   const classes = useStyles();
   useEffect(() => {
-    axios.get(`http://localhost:5000/all?start=${range[0]}&end=${range[1]}`)
+    axios.get(`${backend_url}/all?start=${range[0]}&end=${range[1]}`)
       .then(({ data }) => {
         dataSetter(() => (data));
         Object.keys(data[0]).forEach((elt) => {
@@ -52,7 +53,7 @@ function App() {
         console.log(err);
       });
 
-    axios.get('http://localhost:5000/numdays')
+    axios.get('${backend_url}/numdays')
       .then(({data}) => {
         console.log(data)
         maxDaySetter(() => (Number(data.numDays)));
@@ -66,7 +67,7 @@ function App() {
   function rangeChanger(event, newValue){
     console.log(newValue);
     rangeSetter(() => (newValue));
-    axios.get(`http://localhost:5000/all?start=${range[0]}&end=${range[1]}`)
+    axios.get(`${backend_url}/all?start=${range[0]}&end=${range[1]}`)
       .then(({ data }) => {
         dataSetter(() => (data));
         console.log(Object.keys(data[0]));
@@ -94,7 +95,7 @@ function App() {
         {
           plots.map((plt) => (
             <Line type="monotone" dataKey={plt} stroke={(() => {console.log(colorChart[plt]); return colorChart[plt];})()} dot={{r: 1}} />
-          ))  
+          ))
         }
       </LineChart>
 
@@ -109,7 +110,7 @@ function App() {
           valueLabelDisplay="auto"
           aria-labelledby="range-slider"
           max={maxDay}
-          
+
         />
 
       </div>
@@ -137,7 +138,7 @@ function App() {
             {Object.keys(data[0]).map((k) => (
               <MenuItem key={k} value={k} className={classes.chip}>{k}</MenuItem>
             ))}
-            
+
           </Select>
         </FormControl>
       </div>
