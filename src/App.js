@@ -11,7 +11,7 @@ import Slider from '@material-ui/core/Slider';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 
-const backend_url = process.env.BACKEND_URL || "http://localhost:5000";
+
 const useStyles = makeStyles({
   root: {
     width: 300
@@ -34,6 +34,7 @@ const useStyles = makeStyles({
 });
 
 function App() {
+  const backend_url = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
   var [data, dataSetter] = useState([{dum: 1, my: 2}]);
   var [range, rangeSetter] = useState([25, 70]);
   var [maxDay, maxDaySetter] = useState(200);
@@ -53,7 +54,7 @@ function App() {
         console.log(err);
       });
 
-    axios.get('${backend_url}/numdays')
+    axios.get(`${backend_url}/numdays`)
       .then(({data}) => {
         console.log(data)
         maxDaySetter(() => (Number(data.numDays)));
