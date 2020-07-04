@@ -291,7 +291,7 @@ function ParamGraph({ history }) {
         <div>
             <SideBar anchor={"Scenario Controls"} open={sidebarState} closefunc={toggleDrawer()} />
             <Button variant="contained" onClick={toggleDrawer()}>Change Scenarios</Button>
-            <Button variant="contained" onClick={() => {history.push("/")}}>Back to Region Settings</Button>
+            <Button variant="contained" onClick={() => {history.push("/"); pass = 0;}}>Back to Region Settings</Button>
             {
                 createSpace()
             }
