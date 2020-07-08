@@ -20,8 +20,10 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import CloseIcon from '@material-ui/icons/Close';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import CheckIcon from '@material-ui/icons/Check';
+import axios from 'axios';
 
-
+const backend_url = process.env.REACT_APP_BACKEND_URL || "http://ecoprojectkgp.herokuapp.com";
 
 const useStyles = makeStyles({
     list: {
@@ -38,24 +40,24 @@ const useStyles = makeStyles({
           margin: 3,
           width: '25ch',
         },
-      },
-      btnRoot: {
-          '& > *': {
-              margin: '4px',
-          },
-          marginTop: '25px',
-      },
-      icon: {
-          margin: 1,
-          fontSize: 32
-      },
-      accordionRoot: {
-          width: '100%'
-      },
-      accordionHeading: {
-          fontSize: 15,
-          fontWeight: 'regular' 
-      },
+    },
+    btnRoot: {
+        '& > *': {
+            margin: '4px',
+        },
+        marginTop: '25px',
+    },
+    icon: {
+        margin: 1,
+        fontSize: 32
+    },
+    accordionRoot: {
+        width: '100%'
+    },
+    accordionHeading: {
+        fontSize: 15,
+        fontWeight: 'regular' 
+    },
 });
 
 function keyToFieldName(key) {
@@ -78,7 +80,7 @@ const defaultScenario = {
     }
 }
 
-export default function SideBar({ anchor, open, closefunc }){
+export default function SideBar({ anchor, open, closefunc, composer }){
     const [formData, setformData] = useState(JSON.parse(localStorage.getItem("scendata")) || {
         numScenarios: 1,
         scenarios: [
@@ -130,12 +132,65 @@ export default function SideBar({ anchor, open, closefunc }){
     }
 
     const editField = (idx, group, key, val) => {
-        let reg = cloneDeep(formData.regions);
+        let reg = cloneDeep(formData.scenarios);
         reg[Number(idx)][group][key] = Number(val);
         setformData({
             numScenarios: formData.numScenarios,
-            regions: reg
+            scenarios: reg
         })
+    }
+
+    const fetchData = (idx) => {
+        document.getElementById("progress-" + String(idx)).style.display = "inline";
+        let regions = JSON.parse(localStorage.getItem('data'));
+        //Use only the first region for now.
+        let reg = regions.regions[0];
+        let scen = formData.scenarios[Number(idx)];
+        let req = {
+            socialDistRatio: scen.control.socialDistanceRatio,
+            lockdownDays: scen.control.durationOfLockdown,
+            simulationEndDate: reg.basic.totalSimulatedDays,
+            testingCapacity: scen.control.testingCapacity,
+            cityPopulation: reg.basicPopulation.populationTotal,
+            cityDensity: reg.basicPopulation.populationDensity,
+            cityFamilySize: reg.basicPopulation.familySize,
+            cityFamilySizeVar: reg.basicPopulation.familySizeVar,
+            transportPeopleAtAirport: reg.transportation.expectedPeopleAtAirport,
+            transportPeopleAtAirportVar: reg.transportation.varianceOfPeopleAtAirport,
+            transportPeopleAtRailways: reg.transportation.expectedPeopleAtRailwayStation,
+            transportPeopleAtRailwaysVar: reg.transportation.varianceOfPeopleAtRailwayStation,
+            transportNumLocalTransport: reg.transportation.numberOfLocalTransport,
+            transportPeopleAtLocalTransport: reg.transportation.expectedPeopleAtLocalTransport,
+            transactionProbabilityOfPurchase: reg.transactionModel.probabilityOfPurchase,
+            transactionMinGroceryRequirements: reg.transactionModel.minimumGroceryRequirements
+        };
+        console.log(backend_url);
+        axios.post(`${backend_url}/paramgraph`, req)
+            .then((res) => {
+                console.log(res);
+                let id = res.data.id;
+                var timer;
+                timer = setInterval(() => {
+                    axios.get(`${backend_url}/paramgraph?id=${id}`)
+                        .then((resp) =>{
+                            localStorage.setItem(`scenario-${idx}-region-0`, JSON.stringify(resp));
+                            composer(`scenario-${idx}-region-0`, () => {
+                                clearInterval(timer);
+                                document.getElementById("progress-" + String(idx)).style.display = "none";
+                                document.getElementById("progresscomplete-" + String(idx)).style.display = "inline";
+
+                            });
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        })
+                }, 500);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+
+
     }
 
     const classes = useStyles();
@@ -203,9 +258,10 @@ export default function SideBar({ anchor, open, closefunc }){
                                         </form>
                                     </CardContent>
                                     <CardActions>
-                                        <Button color="secondary" onClick={() => {document.getElementById("progress-" + String(idx)).style.display = "inline";}}>
+                                        <Button color="secondary" onClick={() => {fetchData(idx)}}>
                                             Simulate
                                             <CircularProgress id={"progress-" + String(idx)} style={{display: "none"}} />
+                                            <CheckIcon id={"progresscomplete-" + String(idx)} style={{display: "none"}} />
                                         </Button>
                                     </CardActions>
                                 </Card>
