@@ -29,12 +29,15 @@ const backend_url =
 const useStyles = makeStyles({
   list: {
     width: 500,
+    // backgroundColor: "black",
   },
   fullList: {
     width: "auto",
   },
   cardRoot: {
     maxWidth: 500,
+    backgroundColor: "rgba(0,0,0,0.85)",
+    color: "white",
   },
   formRoot: {
     "& .MuiTextField-root": {
@@ -257,6 +260,11 @@ export default function SideBar({ anchor, open, closefunc, composer }) {
                               expandIcon={<ExpandMoreIcon />}
                               aria-controls={e + String(idx) + "-content"}
                               id={e + String(idx) + "-header"}
+                              style={{
+                                backgroundColor: "rgba(0,0,0,0.6)",
+                                borderRadius: "2px",
+                                color: "white",
+                              }}
                             >
                               <Typography className={classes.accordionHeading}>
                                 {keyToFieldName(e) + " Parameters"}
@@ -291,6 +299,7 @@ export default function SideBar({ anchor, open, closefunc, composer }) {
                 <CardActions>
                   <Button
                     color="secondary"
+                    // style={{ color: "red" }}
                     onClick={() => {
                       fetchData(idx);
                     }}
@@ -298,7 +307,11 @@ export default function SideBar({ anchor, open, closefunc, composer }) {
                     Simulate
                     <CircularProgress
                       id={"progress-" + String(idx)}
-                      style={{ display: "none" }}
+                      style={{
+                        display: "none",
+                        color: "white",
+                        marginLeft: 15,
+                      }}
                     />
                     <CheckIcon
                       id={"progresscomplete-" + String(idx)}
@@ -316,7 +329,7 @@ export default function SideBar({ anchor, open, closefunc, composer }) {
         onClick={() => {
           incScenario();
         }}
-        color="primary"
+        style={{ color: "rgb(95,158,160)" }}
       >
         Add new scenario
       </Button>
@@ -325,7 +338,7 @@ export default function SideBar({ anchor, open, closefunc, composer }) {
 
   return (
     <Fragment key="left">
-      <Drawer anchor={anchor} open={open} onClose={closefunc}>
+      <Drawer anchor="left" open={open} onClose={closefunc}>
         {list("left")}
       </Drawer>
     </Fragment>

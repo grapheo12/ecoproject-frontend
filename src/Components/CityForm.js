@@ -14,6 +14,8 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import { withRouter } from "react-router-dom";
+import { ActionImportantDevices } from "material-ui/svg-icons";
+import "./style.css";
 
 const useStyles = makeStyles(() => ({
   formRoot: {
@@ -25,6 +27,8 @@ const useStyles = makeStyles(() => ({
   btnRoot: {
     "& > *": {
       margin: "8px",
+      padding: "8px 25px",
+      borderRadius: "20px",
     },
     marginTop: "25px",
   },
@@ -34,14 +38,18 @@ const useStyles = makeStyles(() => ({
   },
   accordionRoot: {
     width: "100%",
-    marginBottom: "1rem",
+    marginBottom: "0.75rem",
   },
   accordionHeading: {
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: "regular",
+    color: "white",
   },
   cardRoot: {
     maxWidth: 1000,
+    backgroundColor: "rgba(0,0,0)",
+    color: "white",
+    textAlign: "center",
   },
 }));
 
@@ -166,6 +174,7 @@ function CityForm({ history }) {
                   </Button>
                 }
                 title={"Region " + String(idx + 1)}
+                titleTypographyProps={{ variant: "h6" }}
               />
               <CardContent>
                 <form className={classes.formRoot}>
@@ -179,6 +188,10 @@ function CityForm({ history }) {
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls={e + String(idx) + "-content"}
                             id={e + String(idx) + "-header"}
+                            style={{
+                              backgroundColor: "rgba(0,0,0,0.6)",
+                              borderRadius: "2px",
+                            }}
                           >
                             <Typography className={classes.accordionHeading}>
                               {keyToFieldName(e) + " Parameters"}
@@ -220,7 +233,7 @@ function CityForm({ history }) {
           onClick={() => {
             incRegion();
           }}
-          style={{ backgroundColor: "orange" }}
+          style={{ backgroundColor: "rgb(95,158,160)", color: "white" }}
         >
           Add New Region
         </Button>
@@ -230,7 +243,7 @@ function CityForm({ history }) {
           onClick={() => {
             saveData();
           }}
-          style={{ backgroundColor: "green" }}
+          style={{ backgroundColor: "rgb(95,158,160)" }}
         >
           Save and Continue
         </Button>

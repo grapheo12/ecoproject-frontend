@@ -27,6 +27,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Slider from "@material-ui/core/Slider";
 import axios from "axios";
 import { render } from "@testing-library/react";
+import "./style.css";
 
 const useStyles = makeStyles(() => ({
   formRoot: {
@@ -182,7 +183,7 @@ function ParamGraph({ history }) {
               valueLabelDisplay="auto"
               aria-labelledby="range-slider"
               max={maxDay}
-              style={{ width: "10rem", color: "brown" }}
+              style={{ width: "12rem", color: "brown" }}
             />
           </div>
         </div>
@@ -195,7 +196,7 @@ function ParamGraph({ history }) {
           }}
         >
           <FormControl className={classes.formControl}>
-            <InputLabel>Plots</InputLabel>
+            <InputLabel style={{ color: "white" }}>Plots</InputLabel>
             <Select
               labelId={"plots-label"}
               multiple
@@ -231,7 +232,10 @@ function ParamGraph({ history }) {
           }}
         >
           <div>
-            <Checkbox onClick={() => showgraph(!show)} />
+            <Checkbox
+              onClick={() => showgraph(!show)}
+              style={{ color: "white" }}
+            />
             <label>Show all graphs seperately</label>
           </div>
         </div>
@@ -351,7 +355,8 @@ function ParamGraph({ history }) {
       });
       newnewdata.push(obj);
     }
-    let cpList = cloneDeep(list);
+    let cpList = [];
+    // cloneDeep(list);
     let newlist = {};
     for (let key in Object.keys(basicList)) {
       newlist[key + str] = basicList[key];
@@ -361,7 +366,8 @@ function ParamGraph({ history }) {
       ...newlist,
     });
 
-    let gdt = cloneDeep(graphData);
+    let gdt = [];
+    // cloneDeep(graphData);
     if (gdt.length === 0) {
       console.log("0 length");
       dataSetter(newnewdata);
@@ -415,7 +421,12 @@ function ParamGraph({ history }) {
       <Button
         variant="contained"
         onClick={toggleDrawer()}
-        style={{ margin: "1rem", backgroundColor: "orange" }}
+        style={{
+          margin: "0.6rem",
+          backgroundColor: "rgb(95,158,160)",
+          color: "white",
+          borderRadius: 20,
+        }}
       >
         Change Scenarios
       </Button>
@@ -425,7 +436,12 @@ function ParamGraph({ history }) {
           history.push("/");
           pass = 0;
         }}
-        style={{ backgroundColor: "red" }}
+        style={{
+          margin: "0.6rem",
+          backgroundColor: "rgb(95,158,160)",
+          color: "white",
+          borderRadius: 20,
+        }}
       >
         Back to Region Settings
       </Button>
