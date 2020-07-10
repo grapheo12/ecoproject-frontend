@@ -355,8 +355,7 @@ function ParamGraph({ history }) {
       });
       newnewdata.push(obj);
     }
-    let cpList = [];
-    // cloneDeep(list);
+    let cpList = cloneDeep(list);
     let newlist = {};
     for (let key in Object.keys(basicList)) {
       newlist[key + str] = basicList[key];
@@ -366,8 +365,7 @@ function ParamGraph({ history }) {
       ...newlist,
     });
 
-    let gdt = [];
-    // cloneDeep(graphData);
+    let gdt = cloneDeep(graphData);
     if (gdt.length === 0) {
       console.log("0 length");
       dataSetter(newnewdata);
